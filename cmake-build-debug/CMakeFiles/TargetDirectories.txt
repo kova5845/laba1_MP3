@@ -1,0 +1,3 @@
+/home/alexey/2 курс/МРЗвИС/MRZVIS/ll1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/alexey/2 курс/МРЗвИС/MRZVIS/ll1/cmake-build-debug/CMakeFiles/ll1.dir
+/home/alexey/2 курс/МРЗвИС/MRZVIS/ll1/cmake-build-debug/CMakeFiles/edit_cache.dir
