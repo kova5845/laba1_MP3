@@ -174,9 +174,11 @@ void view(int *a, int size)
         for(int i = 0; i < size; i++)
         {
             cout << a[i];
+            if(i % 4 == 3 && i!=size-1)
+                cout << ".";
         }
     }
-    else cout << "                ";
+    else cout << "                   ";
 }
 
 int arrToNumber(int* a, int size)
@@ -191,8 +193,8 @@ int arrToNumber(int* a, int size)
 
 void conveer(int **a, int **b, int **c, int kol, vector<int> &result)
 {
-    int ***mas = new int **[kol];
-    for(int i = 0; i < kol; i++)
+    int ***mas = new int **[MAX_SIZE];
+    for(int i = 0; i < MAX_SIZE; i++)
     {
         mas[i] = new int *[MAX_SIZE + kol - 1];
     }
@@ -202,26 +204,36 @@ void conveer(int **a, int **b, int **c, int kol, vector<int> &result)
             {
                 if (a[i][j] == 1)
                     c[i] = summa(b[i], c[i]);
-                mas[i][j*2] = ravno(c[i], MAX_SIZE);
+                mas[j*2][i] = ravno(c[i], MAX_SIZE);
                 if (j != SIZE - 1)
                 {
                     sdvig(c[i]);
-                    mas[i][j*2 + 1] = ravno(c[i], MAX_SIZE);
+                    mas[j*2+1][i] = ravno(c[i], MAX_SIZE);
                 }
+                else mas[j*2+1][i] = ravno(c[i], MAX_SIZE);
             }
         result.push_back(arrToNumber(c[i], MAX_SIZE));
     }
-    for(int j=0;j<kol;j++)
+    for(int j=0;j<MAX_SIZE;j++)
     {
-        inver_sdvig(mas[j], j, MAX_SIZE + kol - 1);
+            inver_sdvig(mas[j], j, MAX_SIZE + kol - 1);
     }
+    cout << "               ";
+    for(int i=0;i<MAX_SIZE;i++)
+    {
+        cout << "Step " << i << "               ";
+    }
+    cout << endl;
+    cout << endl;
     for(int i=0;i<MAX_SIZE + kol - 1;i++)
     {
-        for(int j=0;j<kol;j++)
+        cout << "Takt " << i << "  ";
+        for(int j=0;j<MAX_SIZE;j++)
         {
             view(mas[j][i],MAX_SIZE);
             cout << "  ";
         }
+        cout << endl;
         cout << endl;
     }
 }
