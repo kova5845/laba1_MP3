@@ -2,10 +2,10 @@
 //Выполнена студентом группы 721701
 //БГУИР Коваленко Алексей Васильевич
 //Реализация алгоритма вычисления произведения пары 8-разрядных чисел умножением
-// со старших разрядов со сдвигом частичной суммы влево
+//со старших разрядов со сдвигом частичной суммы влево
 //V.1.0
 //алгоритм вычисления произведения 8-разрядных чисел умножением со старших разрядов со
-// сдвигом частичной суммы влево
+//сдвигом частичной суммы влево
 
 #include <iostream>
 #include <vector>
@@ -24,7 +24,8 @@ void inver_sdvig(int *a);
 void view(int *a, int size);
 int arrToNumber(int* a, int size);
 void conveer(int **a, int **b, int **c, int kol, vector<int> &result);
-int *ravno(const int *a, int size);
+int *ravno(const int *a, int size, bool flag);
+int *null_el(int size);
 
 int main()
 {
@@ -93,6 +94,22 @@ vector<int> mult(vector<int> vector1, vector<int> vector2)
 	cout << endl;
 	cout << endl;
     conveer(a, b, c, kol, result);
+
+    for(int i=0;i<kol;i++)
+    {
+        delete[] a[i];
+    }
+    for(int i=0;i<kol;i++)
+    {
+        delete[] b[i];
+    }
+    for(int i=0;i<kol;i++)
+    {
+        delete[] c[i];
+    }
+    delete[] a;
+    delete[] b;
+    delete[] c;
 	return result;
 }
 
@@ -196,54 +213,91 @@ void conveer(int **a, int **b, int **c, int kol, vector<int> &result)
     int ***mas = new int **[MAX_SIZE];
     for(int i = 0; i < MAX_SIZE; i++)
     {
-        mas[i] = new int *[MAX_SIZE + kol - 1];
+        mas[i] = new int *[2 * (MAX_SIZE + kol - 1)];
     }
     for(int i = 0; i < kol; i++)
     {
-            for (int j = 0; j < SIZE; j++)
-            {
-                if (a[i][j] == 1)
-                    c[i] = summa(b[i], c[i]);
-                mas[j*2][i] = ravno(c[i], MAX_SIZE);
-                if (j != SIZE - 1)
-                {
-                    sdvig(c[i]);
-                    mas[j*2+1][i] = ravno(c[i], MAX_SIZE);
-                }
-                else mas[j*2+1][i] = ravno(c[i], MAX_SIZE);
+        for (int j = 0; j < SIZE; j++)
+        {
+            if (a[i][j] == 1) {
+                c[i] = summa(b[i], c[i]);
+                mas[j*2][i*2] = ravno(b[i], MAX_SIZE, false);
             }
+            else {
+                mas[j*2][i*2] = null_el(MAX_SIZE);
+            }
+            mas[j*2][i*2 + 1] = ravno(c[i], MAX_SIZE, true);
+            mas[j*2 + 1][i*2] = ravno(c[i], MAX_SIZE, true);
+            if (j != SIZE - 1)
+                sdvig(c[i]);
+            mas[j*2 + 1][i*2 + 1] = ravno(c[i], MAX_SIZE, true);
+        }
         result.push_back(arrToNumber(c[i], MAX_SIZE));
     }
     for(int j=0;j<MAX_SIZE;j++)
     {
-            inver_sdvig(mas[j], j, MAX_SIZE + kol - 1);
+        inver_sdvig(mas[j], j*2 , 2 * (MAX_SIZE + kol - 1));
     }
     cout << "               ";
     for(int i=0;i<MAX_SIZE;i++)
     {
-        cout << "Step " << i << "               ";
+        cout << "Step " << i + 1 << "               ";
     }
     cout << endl;
     cout << endl;
-    for(int i=0;i<MAX_SIZE + kol - 1;i++)
+    for(int i=0;i<2 * (MAX_SIZE + kol - 1);i++)
     {
-        cout << "Takt " << i << "  ";
+        //getchar();
+        if(i % 2 == 0) {
+            cout << "Tact " << i / 2 + 1 << " ";
+            if(i / 2 + 1 < 10)
+                cout << " ";
+        }
+        else cout << "        ";
         for(int j=0;j<MAX_SIZE;j++)
         {
-            view(mas[j][i],MAX_SIZE);
+            view(mas[j][i], MAX_SIZE);
             cout << "  ";
         }
         cout << endl;
-        cout << endl;
+        if(i % 2)
+            cout << endl;
     }
+//    for(int i = 0; i < MAX_SIZE; i++)
+//    {
+//        for(int j=0;j<MAX_SIZE + kol - 1;j++)
+//        {
+//            delete[] mas[i][j];
+//        }
+//        delete[] mas[i];
+//    }
+//    delete[] mas;
 }
 
-int *ravno(const int *a, int size)
+int *ravno(const int *a, int size, bool flag)
 {
     int *mas = new int[size];
-    for(int i=0;i<size;i++)
-    {
-        mas[i] = a[i];
+    if(flag) {
+        for (int i = 0; i < size; i++) {
+            mas[i] = a[i];
+        }
+    }
+    else {
+        for(int i = 0; i < size; i++){
+            if(i<size/2)
+                mas[i] = 0;
+            else mas[i] = a[i - size/2];
+        }
     }
     return mas;
+}
+
+
+int *null_el(int size){
+    int *a = new int[size];
+    for(int i = 0; i < size; i++)
+    {
+        a[i] = 0;
+    }
+    return a;
 }
