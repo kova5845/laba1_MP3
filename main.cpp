@@ -245,9 +245,10 @@ void conveer(int **a, int **b, int **c, int kol, vector<int> &result)
     }
     cout << endl;
     cout << endl;
-    for(int i=0;i<2 * (MAX_SIZE + kol - 1);i++)
+    for(int i = 0; i < 2 * (MAX_SIZE + kol - 1); i++)
     {
-        //getchar();
+        if(i  % 2 == 0)
+            getchar();
         if(i % 2 == 0) {
             cout << "Tact " << i / 2 + 1 << " ";
             if(i / 2 + 1 < 10)
@@ -260,18 +261,14 @@ void conveer(int **a, int **b, int **c, int kol, vector<int> &result)
             cout << "  ";
         }
         cout << endl;
-        if(i % 2)
-            cout << endl;
     }
-//    for(int i = 0; i < MAX_SIZE; i++)
-//    {
-//        for(int j=0;j<MAX_SIZE + kol - 1;j++)
-//        {
-//            delete[] mas[i][j];
-//        }
-//        delete[] mas[i];
-//    }
-//    delete[] mas;
+    for(int i = 0; i < MAX_SIZE; i++)
+    {
+        for(int j = 0; j < 2 * (MAX_SIZE + kol - 1); j++)
+        {
+            delete[] mas[i][j];
+        }
+    }
 }
 
 int *ravno(const int *a, int size, bool flag)
